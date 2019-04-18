@@ -336,7 +336,13 @@ END
 #          creation failed.
 function createRelease(){
   local release_desc="$CREATE_MESSAGE"
+  if [ ! -z "$3" ]; then
+    release_desc="$3"
+  fi
   local draft="true"
+  if [ ! -z "$2" ]; then
+    draft="$2"
+  fi
   local dField=""
   # Connect github to create release
   infoMsg "Connecting github to create release: $1"
@@ -344,6 +350,16 @@ function createRelease(){
   if [ $# -eq 2 ]; then
     release_desc=$2 
   fi
+  cat <<END
+{
+ "tag_name": "$1",
+ "target_commitish": "master",
+ "name": "$1",
+ "body": "$release_desc",
+ "draft": $draft,
+ "prerelease": false
+}
+END
   curl --user ${LOGIN}:${TOKEN} \
      --request POST \
      --output "$github_answer" \
