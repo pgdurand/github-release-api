@@ -374,6 +374,14 @@ END
     dField=$(getDataField "$github_answer" "message")
 	  throw "  Failed. $dField"
   fi
+  # show tag, which is needed to access a draft release
+  tagField=$(getDataField "$github_answer" "html_url")
+  if [ ! -z "$tagField" ]; then
+    infoMsg "  tag is: $(echo $tagField | sed -e 's@.*/@@')"
+  else
+    msgField=$(getDataField "$github_answer" "message")
+	  throw "  Failed. $msgField"
+  fi
 }
 
 # --------
