@@ -416,7 +416,7 @@ function checkMandatoryArg(){
 #  return: nothing
 #   throw: exit application if value is unknown
 function checkCommand(){
-  local cmds=( "create" "flist" "rlist" "upload" "delete" "info" "erase")
+  local cmds=( "create" "draft" "flist" "rlist" "upload" "delete" "info" "erase")
   
   if [[ "${cmds[*]}" =~ "$1" ]]; then
     return 0
