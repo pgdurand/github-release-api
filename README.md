@@ -215,7 +215,13 @@ For that, we use the "erase" command and pass in the file, as follows:
 	  -s turn script to silent mode
 	  -m release message: only used when creating a new release
 	  -h display this message
-	
+
+# Release notes
+
+- v1.1.0 (eschen42)
+  - added 'draft' command
+- v1.0.0 (pdurand)
+  - released Patrick Durand's code as forked from https://github.com/pgdurand/github-release-api
 # License
 
 This project includes a slightly modified version of [JSON.sh](https://github.com/dominictarr/JSON.sh) which is covered by MIT and Apache V2 licenses.

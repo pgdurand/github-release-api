@@ -44,7 +44,7 @@ TAG=""
 #list of files from command-line ([file ...] part if any)
 FILES=""
 #default message used to create a new release
-CREATE_MESSAGE="new release"
+CREATE_MESSAGE="new draft release"
 #by default this script talk to you
 SILENT="off"
 
@@ -329,12 +329,14 @@ END
 # --------
 # FUNCTION: upload a file to github
 #   arg1: tag name
-#   arg2: release description (optional)
+#   arg2: create draft release? "true" or "false" (optional, defaults is "true")
+#   arg3: release description (optional)
 #   return: nothing
 #   throw: exit if tag already exist as a release on github side, or if release 
 #          creation failed.
 function createRelease(){
-  local release_desc="new release"
+  local release_desc="$CREATE_MESSAGE"
+  local draft="true"
   local dField=""
   # Connect github to create release
   infoMsg "Connecting github to create release: $1"
@@ -353,7 +355,7 @@ function createRelease(){
  "target_commitish": "master",
  "name": "$1",
  "body": "$release_desc",
- "draft": false,
+ "draft": $draft,
  "prerelease": false
 }
 END
