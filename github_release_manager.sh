@@ -23,8 +23,12 @@
 # This script can be used either as a command-line tool (use -h to get help) or as an API.
 # For the latter use, see github_release_api.sh script.
 #
-# Author: Patrick Durand, Inria
+# Author: Patrick Durand, Inria (pdurand)
 # Created: December 2015
+#
+# ---
+# Updated: Art Eschenlauer, University of Minnesota (eschen42)
+# Change:  Added "draft" command
 #*****************************************************************************************
 
 # ========================================================================================
@@ -47,8 +51,9 @@ function help(){
   printf "\n"
   printf "Release managment commands are provided using:\n"
   printf "  -c <command> command to execute.\n"
-  printf "   'command' is one of create, list, upload, delete, info.\n"
+  printf "   'command' is one of create, draft, flist, upload, delete, info, erase, rlist.\n"
   printf "   create: create a new release.\n"
+  printf "    draft: create a new draft release.\n"
   printf "    flist: list files available for an existing release.\n"
   printf "   upload: upload file(s) to an existing release.\n"
   printf "   delete: permanently delete remote file(s) from an existing release.\n"
@@ -114,7 +119,11 @@ case "$COMMAND" in
     ;;
   create)
     checkTag
-    createRelease $TAG "$CREATE_MESSAGE"
+    createRelease $TAG "false" "$CREATE_MESSAGE"
+    ;;
+  draft)
+    checkTag
+    createRelease $TAG "true" "$CREATE_MESSAGE"
     ;;
   upload) 
     checkTag

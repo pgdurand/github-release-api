@@ -44,7 +44,7 @@ TAG=""
 #list of files from command-line ([file ...] part if any)
 FILES=""
 #default message used to create a new release
-CREATE_MESSAGE="new release"
+CREATE_MESSAGE="new draft release"
 #by default this script talk to you
 SILENT="off"
 
@@ -329,12 +329,20 @@ END
 # --------
 # FUNCTION: upload a file to github
 #   arg1: tag name
-#   arg2: release description (optional)
+#   arg2: create draft release? "true" or "false" (optional, defaults is "true")
+#   arg3: release description (optional)
 #   return: nothing
 #   throw: exit if tag already exist as a release on github side, or if release 
 #          creation failed.
 function createRelease(){
-  local release_desc="new release"
+  local release_desc="$CREATE_MESSAGE"
+  if [ ! -z "$3" ]; then
+    release_desc="$3"
+  fi
+  local draft="true"
+  if [ ! -z "$2" ]; then
+    draft="$2"
+  fi
   local dField=""
   # Connect github to create release
   infoMsg "Connecting github to create release: $1"
@@ -342,6 +350,16 @@ function createRelease(){
   if [ $# -eq 2 ]; then
     release_desc=$2 
   fi
+  cat <<END
+{
+ "tag_name": "$1",
+ "target_commitish": "master",
+ "name": "$1",
+ "body": "$release_desc",
+ "draft": $draft,
+ "prerelease": false
+}
+END
   curl --user ${LOGIN}:${TOKEN} \
      --request POST \
      --output "$github_answer" \
@@ -353,7 +371,7 @@ function createRelease(){
  "target_commitish": "master",
  "name": "$1",
  "body": "$release_desc",
- "draft": false,
+ "draft": $draft,
  "prerelease": false
 }
 END
@@ -371,6 +389,14 @@ END
   else
     dField=$(getDataField "$github_answer" "message")
 	  throw "  Failed. $dField"
+  fi
+  # show tag, which is needed to access a draft release
+  tagField=$(getDataField "$github_answer" "html_url")
+  if [ ! -z "$tagField" ]; then
+    infoMsg "  tag is: $(echo $tagField | sed -e 's@.*/@@')"
+  else
+    msgField=$(getDataField "$github_answer" "message")
+	  throw "  Failed. $msgField"
   fi
 }
 
@@ -414,7 +440,7 @@ function checkMandatoryArg(){
 #  return: nothing
 #   throw: exit application if value is unknown
 function checkCommand(){
-  local cmds=( "create" "flist" "rlist" "upload" "delete" "info" "erase")
+  local cmds=( "create" "draft" "flist" "rlist" "upload" "delete" "info" "erase")
   
   if [[ "${cmds[*]}" =~ "$1" ]]; then
     return 0

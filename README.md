@@ -99,6 +99,28 @@ So the basic skeleton of a `github_release_manager.sh` command is as follows:
 * (3): a release tag
 * (4): xxx: a command to execute
 
+**Use case 0: create release-draft called "v2.3.1" on "plast-java-app" owned by "PLAST-software"**
+
+Sometimes you need to build up a release, including adding files, before you publish the release.
+This is necessary for tools like Zenodo that only consider the state of a release at the time that
+it is published.  The workflow is to create a draft, add files, maybe modify notes, and publish
+(via the release editor on GitHub).
+
+For this first step, we use the "draft" command (rather than "create"):
+
+        github_release_manager.sh \
+            -l pgdurand -t 268ujk \
+            -o PLAST-software -r plast-java-app \
+            -d v2.3.1 \
+            -c draft
+
+Note the tag in the output, e.g.,
+```
+  tag is: untagged-86bca6e7cbe1f28c2596e
+```
+To modify this release, you will need to use 'untagged-86bca6e7cbe1f28c2596' for
+the `-d` argument value in lieu of 'v2.3.1' for the other use cases below.
+
 **Use case 1: create release called "v2.3.1" on "plast-java-app" owned by "PLAST-software"**
 
 For that, we use the "create" command:
@@ -155,7 +177,15 @@ For that, we use the "info" command, as follows:
             -o PLAST-software -r plast-java-app \
             -d v2.3.1 \
             -c info
-  
+
+To make this easier-to-read YAML, assuming that you have sed and json2yaml installed
+
+        github_release_manager.sh \
+            -l pgdurand -t 268ujk \
+            -o PLAST-software -r plast-java-app \
+            -d v2.3.1 \
+            -c info | sed -n -e '1 d; p' | json2yaml -
+
 **Use case 6: delete a file from a particular project release**
 
 For that, we use the "delete" command and pass in the name of the file to delete from the release, as follows:
@@ -215,7 +245,13 @@ For that, we use the "erase" command and pass in the file, as follows:
 	  -s turn script to silent mode
 	  -m release message: only used when creating a new release
 	  -h display this message
-	
+
+# Release notes
+
+- v1.1.0 (eschen42)
+  - added 'draft' command
+- v1.0.0 (pdurand)
+  - released Patrick Durand's code as forked from https://github.com/pgdurand/github-release-api
 # License
 
 This project includes a slightly modified version of [JSON.sh](https://github.com/dominictarr/JSON.sh) which is covered by MIT and Apache V2 licenses.
