@@ -353,7 +353,6 @@ function createRelease(){
   cat <<END
 {
  "tag_name": "$1",
- "target_commitish": "master",
  "name": "$1",
  "body": "$release_desc",
  "draft": $draft,
@@ -368,7 +367,6 @@ END
      https://api.github.com/repos/${OWNER}/${REPOSITORY}/releases <<END
 {
  "tag_name": "$1",
- "target_commitish": "master",
  "name": "$1",
  "body": "$release_desc",
  "draft": $draft,

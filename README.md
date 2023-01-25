@@ -1,5 +1,7 @@
 # About 
 
+(A fork of the upstram repository because it turns out to not work with the current GitHub API)
+
 This package contains utility scripts to manage:
 
 * git tags: add and delete tags using (1) a canonical format and (2) some controls
